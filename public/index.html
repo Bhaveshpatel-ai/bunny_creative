@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Pic AI</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Login / Signup Page -->
+  <div id="login-page">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="login-btn">Login</button>
+    <p id="login-error" class="error"></p>
+  </div>
+
+  <!-- Home Page -->
+  <div id="home-page" style="display:none;">
+
+    <!-- Header -->
+    <header>
+      <div id="settings">⚙️</div>
+      <div id="saved-menu">☰</div>
+    </header>
+
+    <!-- Prompt Section -->
+    <section id="prompt-section">
+      <textarea id="prompt-box" placeholder="Enter your prompt..."></textarea>
+      <button id="generate-btn">Generate Image</button>
+      <button id="image-to-prompt-btn">Image → Prompt</button>
+      <button id="prompt-image-combo-btn">Prompt + Image → Result</button>
+      <div id="output"></div>
+    </section>
+
+    <!-- Admin Code Panel (NSYHJTJBTS) -->
+    <section id="admin-code-section" style="display:none;">
+      <h3>Admin Code Panel</h3>
+      <textarea id="new-code" rows="10" cols="50" placeholder="Write JS code here to add new features..."></textarea>
+      <button id="run-code-btn">Run Code</button>
+    </section>
+
+    <!-- Notifications for admin -->
+    <section id="notifications" style="display:none;">
+      <h3>Alerts</h3>
+      <ul id="alert-list"></ul>
+    </section>
+
+  </div>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+</body>
+</html>
