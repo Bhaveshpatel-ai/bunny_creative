@@ -1,8 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const axios = require("axios");
+const path = require("path"); // ✅ Missing line added
 
 const app = express();
+
+// Serve static files from “public” folder
+app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 
 // ===== Read secrets from environment (set in Vercel dashboard) =====
@@ -14,9 +18,9 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 app.post("/api/login", (req, res) => {
   const { password } = req.body;
 
-  if(password === APP_PASSWORD) {
+  if (password === APP_PASSWORD) {
     return res.json({ success: true, role: "user" });
-  } else if(password === ADMIN_PASSWORD) {
+  } else if (password === ADMIN_PASSWORD) {
     return res.json({ success: true, role: "admin" });
   } else {
     return res.json({ success: false });
@@ -28,7 +32,7 @@ app.post("/api/generateImage", async (req, res) => {
   const { prompt } = req.body;
 
   // Safety filter
-  if(/ut(a|)r|nanga|remove\s*clothes/i.test(prompt)) {
+  if (/ut(a|)r|nanga|remove\s*clothes/i.test(prompt)) {
     return res.status(400).json({ error: "Disallowed prompt" });
   }
 
@@ -53,26 +57,28 @@ app.post("/api/generateImage", async (req, res) => {
     if (candidates && candidates.length > 0) {
       const parts = candidates[0]?.content?.parts;
       if (parts && parts.length > 0) {
-        // कभी URL आता है
         if (parts[0].text && parts[0].text.startsWith("http")) {
           imageUrl = parts[0].text;
-        }
-        // कभी base64 data आता है
-        else if (parts[0].inlineData?.data) {
+        } else if (parts[0].inlineData?.data) {
           imageUrl = "data:image/png;base64," + parts[0].inlineData.data;
         }
       }
     }
 
-    if(!imageUrl) {
+    if (!imageUrl) {
       return res.status(500).json({ error: "No image returned from Gemini" });
     }
 
     res.json({ imageUrl });
-  } catch(err) {
+  } catch (err) {
     console.error(err.response?.data || err.message);
     res.status(500).json({ error: "Gemini API error" });
   }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+// ✅ Fix for “Cannot GET /”
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+module.exports = app;
